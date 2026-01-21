@@ -17,37 +17,4 @@
 | 2 | Hacker News Proxy | Ivelum | Backend | [2_backend_ivelum](./ivelum) |
 | 3 | AB Testing API | AppBooster | Backend | [3_backend_appbooster](./appBooster) |
 
-## Структура репозитория
 
-```
-test_tasks/
-├── README.md                    # Этот файл
-├── avito_task1/                 # Задание 1: URL Shortener для Avito
-│   ├── README.md                # Описание проекта
-│   ├── Task.md                  # Описание задания
-│   ├── SCREEN.md                # Скриншоты работающего приложения
-│   ├── cmd/                     # Исходный код приложения
-│   ├── tests/                   # Тесты
-│   └── scripts/                 # Скрипты автоматизации
-├── ivelum/                      # Задание 2: Hacker News Proxy для Ivelum
-│   ├── README.md                # Описание проекта
-│   ├── Task.md                  # Описание задания
-│   ├── SCREEN.md                # Скриншоты работающего приложения
-│   ├── cmd/                     # Исходный код приложения
-│   ├── tests/                   # Тесты
-│   └── scripts/                 # Скрипты автоматизации
-└── appBooster/                  # Задание 3: AB Testing API для AppBooster
-    ├── README.md                # Описание проекта
-    ├── Task.md                  # Описание задания
-    ├── SCREEN.md                # Скриншоты работающего приложения
-    ├── cmd/                     # Исходный код приложения
-    ├── tests/                   # Тесты
-    └── scripts/                 # Скрипты автоматизации
-```
-
-## Как использовать
-
-1. Перейдите в папку интересующего задания
-2. Откройте `README.md` для инструкций по запуску
-3. Откройте `Task.md` для описания задания
-4. Откройте `SCREEN.md` для просмотра скриншотов
