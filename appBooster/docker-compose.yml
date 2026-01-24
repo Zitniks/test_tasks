@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: abtesting
+      POSTGRES_PASSWORD: abtesting
+      POSTGRES_DB: abtesting
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://abtesting:abtesting@db:5432/abtesting
+      BASE_URL: http://localhost:8000
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
