@@ -1,0 +1,217 @@
+{
+	"info": {
+		"_postman_id": "hacker-news-proxy-api",
+		"name": "Hacker News Proxy",
+		"description": "Коллекция запросов для тестирования Hacker News Proxy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Главная страница",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8232/",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8232",
+					"path": [
+						""
+					]
+				},
+				"description": "Получить главную страницу Hacker News через прокси"
+			},
+			"response": []
+		},
+		{
+			"name": "Страница статьи",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8232/item?id=13713480",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8232",
+					"path": [
+						"item"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "13713480"
+						}
+					]
+				},
+				"description": "Получить страницу статьи через прокси. Проверьте, что слова из 6 букв имеют символ ™"
+			},
+			"response": []
+		},
+		{
+			"name": "Страница комментариев",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8232/item?id={{item_id}}",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8232",
+					"path": [
+						"item"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{item_id}}"
+						}
+					]
+				},
+				"description": "Получить страницу с комментариями. Замените {{item_id}} на реальный ID статьи"
+			},
+			"response": []
+		},
+		{
+			"name": "Страница пользователя",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8232/user?id={{username}}",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8232",
+					"path": [
+						"user"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{username}}"
+						}
+					]
+				},
+				"description": "Получить страницу пользователя. Замените {{username}} на имя пользователя"
+			},
+			"response": []
+		},
+		{
+			"name": "Поиск",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8232/search?q={{search_query}}",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8232",
+					"path": [
+						"search"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "{{search_query}}"
+						}
+					]
+				},
+				"description": "Поиск на Hacker News через прокси"
+			},
+			"response": []
+		},
+		{
+			"name": "Новые статьи",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8232/newest",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8232",
+					"path": [
+						"newest"
+					]
+				},
+				"description": "Получить страницу с новыми статьями"
+			},
+			"response": []
+		},
+		{
+			"name": "Популярные статьи",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8232/front",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8232",
+					"path": [
+						"front"
+					]
+				},
+				"description": "Получить популярные статьи"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://127.0.0.1:8232",
+			"type": "string"
+		},
+		{
+			"key": "item_id",
+			"value": "13713480",
+			"type": "string"
+		},
+		{
+			"key": "username",
+			"value": "pg",
+			"type": "string"
+		},
+		{
+			"key": "search_query",
+			"value": "python",
+			"type": "string"
+		}
+	]
+}
