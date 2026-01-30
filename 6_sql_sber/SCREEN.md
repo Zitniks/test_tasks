@@ -24,36 +24,55 @@ WHERE e.salary > chief.salary
 ORDER BY e.name;
 ```
 
-### 3. Ожидаемый вид результата
+### 3. Выполненные запросы и результат
 
-После выполнения `solution.sql` в консоли (или в GUI клиента) должен отображаться список имён в одном столбце **name**, например:
+**Запуск (локально, SQLite):**
 
-| name |
+```bash
+cd 6_sql_sber
+sqlite3 sber.db ".read departments.sql" ".read employees.sql"
+sqlite3 -header -column sber.db ".read solution.sql"
+```
+
+**Запрос из solution.sql:**
+
+```sql
+SELECT e.name
+FROM employees e
+INNER JOIN employees chief ON e.chief_id = chief.id
+WHERE e.salary > chief.salary
+ORDER BY e.name;
+```
+
+**Результат выполнения:**
+
+| name             |
 |------------------|
-| Aaron Vaughan |
-| April Goodwin |
-| Christine Foster |
-| Christopher Brown |
-| Christopher Nelson |
-| Erik Lambert |
-| James Hoffman |
-| Jennifer Clark |
-| John Wall |
-| ... |
+| Aaron Vaughan    |
+| Adrian Zavala    |
+| Amanda Rivera    |
+| Angela Frye      |
+| Belinda Anderson |
+| Brian Hawkins    |
+| Erik Lambert     |
+| Gregory Young    |
+| James Kim        |
+| Jenna Carr       |
+| Melody Henderson |
+| Patrick Whitehead|
+| Tyler Nelson     |
 
-(полный список зависит от данных в `employees.sql`; порядок — по алфавиту имени.)
+Всего **13** сотрудников получают зарплату выше, чем у непосредственного руководителя.
 
-### 4. Что зафиксировать на скриншотах (рекомендации)
+### 4. Скриншоты (папка images/)
 
 - **Скрин 1:** Подключение к БД и выполнение скриптов `departments.sql` и `employees.sql` (или вывод об успешном выполнении).
 - **Скрин 2:** Выполнение `solution.sql` и результирующая таблица с полем **name**.
 - **Скрин 3 (по желанию):** Проверка на одном примере: сотрудник, его зарплата, руководитель, зарплата руководителя — видно, что зарплата сотрудника больше.
 
-Скриншоты можно положить в папку `screens/` и оформить ссылки по аналогии с другими заданиями, например:
+#### Результат выполнения запроса
 
-```markdown
-![Результат запроса](screens/result.png)
-```
+![Результат запроса](images/Снимок%20экрана%202026-01-30%20в%2022.37.56.png)
 
 ## Проверка корректности
 
