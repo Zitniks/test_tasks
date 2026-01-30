@@ -19,5 +19,6 @@
 | 4 | TreeStore | ООО мстрой | Backend | [4_backend_mstroy](./ООО%20мстрой) |
 | 5 | Flight Search API | Aviasales | Backend | [5_backend_aviasales](./aviasales) |
 | 6 | Сотрудники с зарплатой выше руководителя (SQL #103) | Сбербанк | SQL | [6_sql_sber](./6_sql_sber) |
+| 7 | Признак наличия интернета в помещении (SQL #74) | Airbnb | SQL | [7_sql_airbnb](./7_sql_airbnb) |
 
 
