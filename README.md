@@ -18,5 +18,4 @@
 | 3 | AB Testing API | AppBooster | Backend | [3_backend_appbooster](./appBooster) |
 | 4 | TreeStore | ООО мстрой | Backend | [4_backend_mstroy](./ООО%20мстрой) |
 | 5 | Flight Search API | Aviasales | Backend | [5_backend_aviasales](./aviasales) |
-
-
+| 6 | Сотрудники с зарплатой выше руководителя (SQL #103) | Сбербанк | SQL | [6_sql_sber](./6_sql_sber) |
