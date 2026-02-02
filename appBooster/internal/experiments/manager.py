@@ -1,10 +1,27 @@
+"""Experiment manager: device assignment and statistics."""
+
 import random
-from typing import Dict, List
+from typing import Any
 
 from sqlalchemy.orm import Session
 
 from internal.models.device import Device, DeviceExperiment
 from internal.models.experiment import Experiment, ExperimentOption
+
+
+def get_experiments(db: Session) -> list[Experiment]:
+    """Return all experiments from the database."""
+    return db.query(Experiment).all()
+
+
+def get_options_for_experiment(db: Session, experiment_key: str) -> list[ExperimentOption]:
+    """Return all options for a given experiment key."""
+    return (
+        db.query(ExperimentOption)
+        .filter(ExperimentOption.experiment_key == experiment_key)
+        .order_by(ExperimentOption.id)
+        .all()
+    )
 
 
 class ExperimentManager:
@@ -20,7 +37,7 @@ class ExperimentManager:
             self.db.refresh(device)
         return device
 
-    def get_experiments_for_device(self, device_token: str) -> Dict[str, str]:
+    def get_experiments_for_device(self, device_token: str) -> dict[str, str]:
         device = self.get_or_create_device(device_token)
         device_first_seen = device.first_seen_at
 
@@ -28,10 +45,9 @@ class ExperimentManager:
         existing_assignments = self.db.query(DeviceExperiment).filter(
             DeviceExperiment.device_token == device_token
         ).all()
-
         existing_dict = {e.experiment_key: e.experiment_value for e in existing_assignments}
 
-        all_experiments = self.db.query(Experiment).all()
+        all_experiments = get_experiments(self.db)
         for exp in all_experiments:
             if exp.key in existing_dict:
                 experiments[exp.key] = existing_dict[exp.key]
@@ -43,9 +59,7 @@ class ExperimentManager:
         return experiments
 
     def _assign_experiment(self, device_token: str, experiment_key: str) -> str | None:
-        options = self.db.query(ExperimentOption).filter(
-            ExperimentOption.experiment_key == experiment_key
-        ).order_by(ExperimentOption.id).all()
+        options = get_options_for_experiment(self.db, experiment_key)
 
         if not options:
             return None
@@ -71,14 +85,12 @@ class ExperimentManager:
 
         return options[-1].value if options else None
 
-    def get_statistics(self) -> List[Dict]:
-        experiments = self.db.query(Experiment).all()
+    def get_statistics(self) -> list[dict[str, Any]]:
+        experiments = get_experiments(self.db)
         stats = []
 
         for exp in experiments:
-            options = self.db.query(ExperimentOption).filter(
-                ExperimentOption.experiment_key == exp.key
-            ).all()
+            options = get_options_for_experiment(self.db, exp.key)
 
             total_devices = self.db.query(DeviceExperiment).filter(
                 DeviceExperiment.experiment_key == exp.key

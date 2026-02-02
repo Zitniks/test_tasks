@@ -1,28 +1,21 @@
-import os
+"""Application settings (env and defaults)."""
+
 from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
+    """Settings loaded from environment and .env."""
+
     base_url: str = 'http://localhost:8000'
-    _database_url: str | None = None
+    database_url: str = 'sqlite:///./abtesting.db'
+    # Used by data migration (env BUTTON_COLOR_OPTIONS / PRICE_OPTIONS). Format: "value1:weight1,value2:weight2,..."
+    button_color_options: str = '#FF0000:33,#00FF00:33,#0000FF:34'
+    price_options: str = '10:75,20:10,50:5,5:10'
 
-    class Config:
-        env_file = '.env'
-        case_sensitive = False
-        env_prefix = ''
-
-    @property
-    def database_url(self) -> str:
-        if self._database_url:
-            return self._database_url
-        
-        db_url = os.getenv('DATABASE_URL', '')
-        if db_url and db_url.startswith('sqlite'):
-            self._database_url = db_url
-            return db_url
-        
-        self._database_url = 'sqlite:///./abtesting.db'
-        return self._database_url
+    model_config = {
+        'env_file': '.env',
+        'case_sensitive': False,
+    }
 
 
 settings = Settings()

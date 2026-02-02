@@ -1,8 +1,3 @@
-import pytest
-from internal.models.experiment import Experiment, ExperimentOption
-from internal.models.device import Device
-
-
 def test_get_experiments_new_device(client, db):
     response = client.get('/api/v1/experiments', headers={'Device-Token': 'test-device-1'})
     assert response.status_code == 200
