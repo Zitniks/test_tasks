@@ -17,7 +17,13 @@ router = APIRouter()
     methods=["GET", "POST"],
     responses={
         200: {"description": "Успешный ответ (HTML или контент с HN)"},
-        502: {"description": "Ошибка при запросе к upstream (HN недоступен или ошибка)"},
+        502: {
+            "description": (
+                "502 Bad Gateway — ошибка при запросе к upstream (HN): "
+                "таймаут, недоступность, HTTP-ошибка от HN. "
+                "Исключение: httpx.HTTPError (RequestError, HTTPStatusError и др.)."
+            ),
+        },
     },
 )
 async def proxy(request: Request, path: str):
@@ -25,7 +31,8 @@ async def proxy(request: Request, path: str):
     Проксирует запрос на Hacker News и возвращает модифицированный HTML или контент.
 
     - Модифицирует текст (™ после слов из 6 букв) и ссылки/формы для работы через прокси.
-    - При ошибке запроса к upstream возвращает 502 Bad Gateway.
+    - При ошибке запроса к upstream (httpx.HTTPError: таймаут, недоступность HN, 4xx/5xx от HN)
+      возвращает 502 Bad Gateway, а не 500 — это ошибка upstream, а не нашего приложения.
     """
     proxy_url = str(request.base_url).rstrip("/")
     target_url = f"{settings.hn_base_url}/{path}"
