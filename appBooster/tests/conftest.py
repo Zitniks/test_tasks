@@ -1,17 +1,17 @@
 """Pytest fixtures for API tests."""
 
+import os
+
 import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+os.environ.setdefault("DATABASE_URL", "sqlite:///./test.db")
+
 from cmd.server.main import app
-from internal.db.connection import Base, get_db
+from internal.db.connection import Base, engine, get_db
 from internal.models.experiment import Experiment, ExperimentOption
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
-
-engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
@@ -34,6 +34,7 @@ def _seed_test_experiments(session):
 
 @pytest.fixture
 def db():
+    """Сессия БД с созданными таблицами и начальными экспериментами (тестовая БД)."""
     Base.metadata.create_all(bind=engine)
     db_session = TestingSessionLocal()
     _seed_test_experiments(db_session)
@@ -46,6 +47,7 @@ def db():
 
 @pytest.fixture
 def client(db):
+    """HTTP-клиент с подменой get_db на тестовую сессию."""
     def override_get_db():
         try:
             yield db

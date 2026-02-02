@@ -1,7 +1,11 @@
+"""Схемы ответов API экспериментов."""
+
 from pydantic import BaseModel
 
 
 class ExperimentResponse(BaseModel):
+    """Ответ с назначенными значениями экспериментов (ключи = experiment_key)."""
+
     button_color: str | None = None
     price: str | None = None
 
@@ -15,6 +19,8 @@ class DistributionItem(BaseModel):
 
 
 class StatisticsResponse(BaseModel):
+    """Статистика по одному эксперименту: ключ, число устройств, распределение по опциям."""
+
     experiment_key: str
     total_devices: int
     distribution: dict[str, DistributionItem]

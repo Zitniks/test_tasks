@@ -25,10 +25,13 @@ def get_options_for_experiment(db: Session, experiment_key: str) -> list[Experim
 
 
 class ExperimentManager:
-    def __init__(self, db: Session):
+    """Назначение экспериментов устройствам и сбор статистики."""
+
+    def __init__(self, db: Session) -> None:
         self.db = db
 
     def get_or_create_device(self, device_token: str) -> Device:
+        """Возвращает устройство по токену или создаёт новое."""
         device = self.db.query(Device).filter(Device.device_token == device_token).first()
         if not device:
             device = Device(device_token=device_token)
@@ -38,6 +41,7 @@ class ExperimentManager:
         return device
 
     def get_experiments_for_device(self, device_token: str) -> dict[str, str]:
+        """Возвращает словарь experiment_key -> value для устройства (с учётом назначений)."""
         device = self.get_or_create_device(device_token)
         device_first_seen = device.first_seen_at
 
@@ -59,6 +63,7 @@ class ExperimentManager:
         return experiments
 
     def _assign_experiment(self, device_token: str, experiment_key: str) -> str | None:
+        """Назначает опцию по весам и сохраняет в device_experiments."""
         options = get_options_for_experiment(self.db, experiment_key)
 
         if not options:
@@ -77,15 +82,17 @@ class ExperimentManager:
                 assignment = DeviceExperiment(
                     device_token=device_token,
                     experiment_key=experiment_key,
-                    experiment_value=option.value
+                    experiment_value=option.value,
                 )
                 self.db.add(assignment)
                 self.db.commit()
                 return option.value
 
-        return options[-1].value if options else None
+        # Fallback при некорректных весах (недостижимо при random_value in [1, total_weight])
+        return options[-1].value
 
     def get_statistics(self) -> list[dict[str, Any]]:
+        """Статистика по каждому эксперименту: распределение по опциям (count, weight, %)."""
         experiments = get_experiments(self.db)
         stats = []
 
