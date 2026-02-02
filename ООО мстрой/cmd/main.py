@@ -1,39 +1,35 @@
+"""Демо-скрипт: загрузка дерева из JSON и вызов методов TreeStore."""
+
+import json
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
+from configs.settings import settings
 from internal.treestore.tree_store import TreeStore
 
-items = [
-    {"id": 1, "parent": "root"},
-    {"id": 2, "parent": 1, "type": "test"},
-    {"id": 3, "parent": 1, "type": "test"},
-    {"id": 4, "parent": 2, "type": "test"},
-    {"id": 5, "parent": 2, "type": "test"},
-    {"id": 6, "parent": 2, "type": "test"},
-    {"id": 7, "parent": 4, "type": None},
-    {"id": 8, "parent": 4, "type": None}
-]
+with open(settings.data_file, encoding="utf-8") as f:
+    items = json.load(f)
 
 ts = TreeStore(items)
 
-if __name__ == '__main__':
-    print("getAll():")
-    print(ts.getAll())
+if __name__ == "__main__":
+    print("get_all():")
+    print(ts.get_all())
     print()
-    
-    print("getItem(7):")
-    print(ts.getItem(7))
+
+    print("get_item(7):")
+    print(ts.get_item(7))
     print()
-    
-    print("getChildren(4):")
-    print(ts.getChildren(4))
+
+    print("get_children(4):")
+    print(ts.get_children(4))
     print()
-    
-    print("getChildren(5):")
-    print(ts.getChildren(5))
+
+    print("get_children(5):")
+    print(ts.get_children(5))
     print()
-    
-    print("getAllParents(7):")
-    print(ts.getAllParents(7))
+
+    print("get_all_parents(7):")
+    print(ts.get_all_parents(7))

@@ -120,7 +120,7 @@ pytest
 
 С покрытием:
 ```bash
-pytest --cov=internal --cov=pkg --cov-report=html
+pytest --cov=internal --cov-report=html
 ```
 
 ## Структура проекта
