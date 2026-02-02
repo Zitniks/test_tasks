@@ -1,4 +1,5 @@
-import pytest
+"""API endpoint tests for Aviasales Flight Search."""
+
 from fastapi import status
 
 

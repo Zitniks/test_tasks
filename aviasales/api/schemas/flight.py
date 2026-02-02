@@ -1,4 +1,6 @@
-from typing import Any, Dict, List, Optional
+"""Pydantic schemas for flight and itinerary API responses."""
+
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -9,14 +11,14 @@ class FlightResponse(BaseModel):
     flight_number: str = Field(..., description='Номер рейса')
     source: str = Field(..., description='Аэропорт отправления (IATA код)')
     destination: str = Field(..., description='Аэропорт прибытия (IATA код)')
-    departure_timestamp: Optional[str] = Field(None, description='Время отправления в формате ISO')
-    arrival_timestamp: Optional[str] = Field(None, description='Время прибытия в формате ISO')
+    departure_timestamp: str | None = Field(None, description='Время отправления в формате ISO')
+    arrival_timestamp: str | None = Field(None, description='Время прибытия в формате ISO')
     class_code: str = Field(..., description='Класс обслуживания')
     number_of_stops: int = Field(..., description='Количество пересадок')
     ticket_type: str = Field(..., description='Тип билета')
 
-    class Config:
-        json_schema_extra = {
+    model_config = {
+        'json_schema_extra': {
             'example': {
                 'carrier_id': 'AI',
                 'carrier_name': 'Air India',
@@ -30,20 +32,21 @@ class FlightResponse(BaseModel):
                 'ticket_type': 'E',
             }
         }
+    }
 
 
 class ItineraryResponse(BaseModel):
-    onward_flights: List[Dict[str, Any]] = Field(..., description='Список рейсов туда')
-    return_flights: List[Dict[str, Any]] = Field(..., description='Список рейсов обратно')
+    onward_flights: list[dict[str, Any]] = Field(..., description='Список рейсов туда')
+    return_flights: list[dict[str, Any]] = Field(..., description='Список рейсов обратно')
     source: str = Field(..., description='Аэропорт отправления (IATA код)')
     destination: str = Field(..., description='Аэропорт прибытия (IATA код)')
     total_duration_minutes: int = Field(..., description='Общая длительность перелёта в минутах')
     total_price: float = Field(..., description='Общая цена перелёта')
     currency: str = Field(..., description='Валюта цены')
-    pricing: Dict[str, Any] = Field(..., description='Детальная информация о ценообразовании')
+    pricing: dict[str, Any] = Field(..., description='Детальная информация о ценообразовании')
 
-    class Config:
-        json_schema_extra = {
+    model_config = {
+        'json_schema_extra': {
             'example': {
                 'onward_flights': [
                     {
@@ -72,23 +75,24 @@ class ItineraryResponse(BaseModel):
                 },
             }
         }
+    }
 
 
 class ComparisonResponse(BaseModel):
-    only_in_first: List[Dict[str, Any]] = Field(
+    only_in_first: list[dict[str, Any]] = Field(
         ..., description='Перелёты, присутствующие только в первом запросе'
     )
-    only_in_second: List[Dict[str, Any]] = Field(
+    only_in_second: list[dict[str, Any]] = Field(
         ..., description='Перелёты, присутствующие только во втором запросе'
     )
-    price_changes: List[Dict[str, Any]] = Field(
+    price_changes: list[dict[str, Any]] = Field(
         ..., description='Перелёты с изменёнными ценами между запросами'
     )
     total_first: int = Field(..., description='Общее количество перелётов в первом запросе')
     total_second: int = Field(..., description='Общее количество перелётов во втором запросе')
 
-    class Config:
-        json_schema_extra = {
+    model_config = {
+        'json_schema_extra': {
             'example': {
                 'only_in_first': [],
                 'only_in_second': [],
@@ -97,3 +101,4 @@ class ComparisonResponse(BaseModel):
                 'total_second': 12,
             }
         }
+    }

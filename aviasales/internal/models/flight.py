@@ -1,8 +1,11 @@
+"""Flight, Pricing and FlightItinerary models for Aviasales data."""
+
 from datetime import datetime
-from typing import List, Optional
 
 
 class Flight:
+    """Single flight segment (carrier, route, timestamps)."""
+
     def __init__(self, data: dict):
         self.carrier_id = data.get('Carrier', {}).get('@id', '')
         self.carrier_name = data.get('Carrier', {}).get('#text', '')
@@ -15,7 +18,8 @@ class Flight:
         self.number_of_stops = int(data.get('NumberOfStops', 0))
         self.ticket_type = data.get('TicketType', '')
 
-    def _parse_timestamp(self, timestamp_str: str) -> Optional[datetime]:
+    def _parse_timestamp(self, timestamp_str: str) -> datetime | None:
+        """Parse XML timestamp (naive, no timezone in source)."""
         if not timestamp_str:
             return None
         try:
@@ -39,6 +43,8 @@ class Flight:
 
 
 class Pricing:
+    """Pricing and service charges for an itinerary."""
+
     def __init__(self, data: dict):
         self.currency = data.get('@currency', '')
         self.service_charges = {}
@@ -64,7 +70,14 @@ class Pricing:
 
 
 class FlightItinerary:
-    def __init__(self, onward_flights: List[Flight], return_flights: Optional[List[Flight]] = None, pricing: Optional[Pricing] = None):
+    """Outbound/return flights and pricing for one itinerary."""
+
+    def __init__(
+        self,
+        onward_flights: list[Flight],
+        return_flights: list[Flight] | None = None,
+        pricing: Pricing | None = None,
+    ):
         self.onward_flights = onward_flights
         self.return_flights = return_flights or []
         self.pricing = pricing
