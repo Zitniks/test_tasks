@@ -1,6 +1,6 @@
 """Класс TreeStore для работы с деревом объектов с быстрым доступом по id."""
 
-from typing import Any, Dict, List
+from typing import Any
 
 
 class ItemNotFoundError(Exception):
@@ -14,14 +14,15 @@ class ItemNotFoundError(Exception):
 class TreeStore:
     """Хранилище дерева с O(1) доступом к элементам по id и к детям по parent."""
 
-    def __init__(self, items: List[Dict[str, Any]]) -> None:
+    def __init__(self, items: list[dict[str, Any]]) -> None:
         self._items = items
-        self._items_by_id: Dict[Any, Dict[str, Any]] = {}
-        self._children_by_id: Dict[Any, List[Dict[str, Any]]] = {}
-        self._parent_map: Dict[Any, Any] = {}
+        self._items_by_id: dict[Any, dict[str, Any]] = {}
+        self._children_by_id: dict[Any, list[dict[str, Any]]] = {}
+        self._parent_map: dict[Any, Any] = {}
+        self._root_id: Any = None  # id элемента с parent=="root"; при нескольких — первый
         self._build_indexes(items)
 
-    def _build_indexes(self, items: List[Dict[str, Any]]) -> None:
+    def _build_indexes(self, items: list[dict[str, Any]]) -> None:
         """Строит индексы по элементам: по id, по детям и карту родителей."""
         for item in items:
             item_id = item["id"]
@@ -34,25 +35,27 @@ class TreeStore:
                 self._children_by_id[parent].append(item)
             else:
                 self._parent_map[item_id] = None
+                if self._root_id is None:
+                    self._root_id = item_id
 
-    def get_all(self) -> List[Dict[str, Any]]:
+    def get_all(self) -> list[dict[str, Any]]:
         """Возвращает исходный массив элементов."""
         return self._items
 
-    def get_item(self, item_id: Any) -> Dict[str, Any]:
+    def get_item(self, item_id: Any) -> dict[str, Any]:
         """Возвращает элемент по id. Бросает ItemNotFoundError, если элемента нет."""
         item = self._items_by_id.get(item_id)
         if item is None:
             raise ItemNotFoundError(item_id)
         return item
 
-    def get_children(self, item_id: Any) -> List[Dict[str, Any]]:
+    def get_children(self, item_id: Any) -> list[dict[str, Any]]:
         """Возвращает список дочерних элементов для данного id."""
         return self._children_by_id.get(item_id, [])
 
-    def get_all_parents(self, item_id: Any) -> List[Dict[str, Any]]:
+    def get_all_parents(self, item_id: Any) -> list[dict[str, Any]]:
         """Возвращает цепочку родителей от родителя элемента до корня."""
-        result: List[Dict[str, Any]] = []
+        result: list[dict[str, Any]] = []
         current_id = item_id
         while current_id is not None:
             item = self._items_by_id.get(current_id)
@@ -61,8 +64,8 @@ class TreeStore:
             if current_id != item_id:
                 result.append(item)
             parent = self._parent_map.get(current_id)
-            if parent == "root":
-                root_item = self._items_by_id.get(1)
+            if parent == "root" and self._root_id is not None:
+                root_item = self._items_by_id.get(self._root_id)
                 if root_item:
                     result.append(root_item)
                 break

@@ -1,3 +1,5 @@
+"""Тесты для TreeStore и ItemNotFoundError."""
+
 import pytest
 
 from internal.treestore.tree_store import ItemNotFoundError, TreeStore
@@ -5,6 +7,7 @@ from internal.treestore.tree_store import ItemNotFoundError, TreeStore
 
 @pytest.fixture
 def sample_items():
+    """Дерево с корнем id=1 и двумя уровнями потомков."""
     return [
         {"id": 1, "parent": "root"},
         {"id": 2, "parent": 1, "type": "test"},
@@ -19,6 +22,7 @@ def sample_items():
 
 @pytest.fixture
 def tree_store(sample_items):
+    """Экземпляр TreeStore, построенный из sample_items."""
     return TreeStore(sample_items)
 
 
@@ -72,7 +76,26 @@ def test_get_all_parents(tree_store):
 
 
 def test_performance(tree_store):
+    """Проверка, что повторные вызовы не деградируют (O(1) доступ)."""
     for _ in range(1000):
         tree_store.get_item(7)
         tree_store.get_children(2)
         tree_store.get_all_parents(7)
+
+
+def test_get_all_parents_root_not_id_one():
+    """Корень может иметь id отличный от 1; цепочка родителей строится корректно."""
+    items = [
+        {"id": 100, "parent": "root"},
+        {"id": 200, "parent": 100},
+        {"id": 300, "parent": 200},
+    ]
+    store = TreeStore(items)
+    result = store.get_all_parents(300)
+    assert len(result) == 2
+    assert result[0]["id"] == 200
+    assert result[1]["id"] == 100
+    assert result[1]["parent"] == "root"
+
+    result_root = store.get_all_parents(100)
+    assert result_root == []

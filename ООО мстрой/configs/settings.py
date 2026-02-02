@@ -12,9 +12,10 @@ class Settings(BaseSettings):
     port: int = 8000
     data_file: Path = Path(__file__).resolve().parent.parent / 'data' / 'items.json'
 
-    class Config:
-        env_file = '.env'
-        case_sensitive = False
+    model_config = {
+        'env_file': '.env',
+        'case_sensitive': False,
+    }
 
 
 settings = Settings()
