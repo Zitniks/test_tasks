@@ -16,5 +16,3 @@
 | 1 | TreeStore | ООО мстрой | Backend | [4_backend_mstroy](./ООО%20мстрой) |
 | 2 | Hacker News Proxy | Ivelum | Backend | [2_backend_ivelum](./ivelum) |
 | 3 | AB Testing API | AppBooster | Backend | [3_backend_appbooster](./appBooster) |
-
-
