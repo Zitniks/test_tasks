@@ -1,4 +1,4 @@
-import pytest
+"""Unit tests for pkg.utils.url."""
 
 from pkg.utils.url import generate_short_code, validate_short_code, validate_url
 

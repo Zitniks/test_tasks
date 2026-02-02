@@ -1,6 +1,13 @@
+"""Unit tests for internal.crud.short_url."""
+
+import os
+
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
+# Use SQLite so connection.Base matches test engine
+os.environ.setdefault('DATABASE_URL', 'sqlite:///./test_crud.db')
 
 from internal.crud.short_url import create_short_url, get_short_url_by_code
 from internal.db.connection import Base

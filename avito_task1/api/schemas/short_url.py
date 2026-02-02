@@ -1,9 +1,13 @@
+"""Pydantic schemas for URL Shortener API."""
+
 from pydantic import BaseModel, Field
+
+MAX_ORIGINAL_URL_LENGTH = 4096
 
 
 class ShortUrlCreate(BaseModel):
-    original_url: str
-    custom_code: str | None = Field(None, max_length=50, min_length=3)
+    original_url: str = Field(..., max_length=MAX_ORIGINAL_URL_LENGTH)
+    custom_code: str | None = Field(None, min_length=3, max_length=50)
 
 
 class ShortUrlResponse(BaseModel):
@@ -11,5 +15,4 @@ class ShortUrlResponse(BaseModel):
     original_url: str
     short_code: str
 
-    class Config:
-        from_attributes = True
+    model_config = {'from_attributes': True}

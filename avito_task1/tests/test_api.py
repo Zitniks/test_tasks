@@ -1,4 +1,5 @@
-import pytest
+"""API endpoint tests for URL Shortener."""
+
 from fastapi import status
 
 
