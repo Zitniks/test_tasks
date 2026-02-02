@@ -18,30 +18,41 @@ def _add_trademark_to_text_nodes(soup: BeautifulSoup) -> None:
             element.replace_with(new_text)
 
 
+def _is_hn_url(url: str) -> bool:
+    """Проверяет, что URL принадлежит HN (избегаем подмены через другой хост)."""
+    base = settings.hn_base_url.rstrip("/")
+    return url == base or url.startswith(base + "/")
+
+
 def _rewrite_links(soup: BeautifulSoup, proxy_url: str) -> None:
     """Заменяет href в ссылках на URL прокси (относительные и полные на HN)."""
     for link in soup.find_all("a", href=True):
         href = link["href"]
         if href.startswith("/"):
             link["href"] = f"{proxy_url}{href}"
-        elif settings.hn_base_url in href:
-            link["href"] = href.replace(settings.hn_base_url, proxy_url)
+        elif _is_hn_url(href):
+            link["href"] = href.replace(settings.hn_base_url.rstrip("/"), proxy_url)
 
 
 def _rewrite_forms(soup: BeautifulSoup, proxy_url: str) -> None:
     """Заменяет action в формах на URL прокси."""
+    base = settings.hn_base_url.rstrip("/")
     for form in soup.find_all("form", action=True):
         action = form["action"]
         if action.startswith("/"):
             form["action"] = f"{proxy_url}{action}"
-        elif settings.hn_base_url in action:
-            form["action"] = action.replace(settings.hn_base_url, proxy_url)
+        elif _is_hn_url(action):
+            form["action"] = action.replace(base, proxy_url)
 
 
 def process_html(html: str, proxy_url: str) -> str:
     """
     Парсит HTML, модифицирует текст (™), ссылки и формы, возвращает HTML-строку.
+
+    Пустая строка возвращается как есть. Используется парсер lxml.
     """
+    if not html or not html.strip():
+        return html
     soup = BeautifulSoup(html, "lxml")
     _add_trademark_to_text_nodes(soup)
     _rewrite_links(soup, proxy_url)
